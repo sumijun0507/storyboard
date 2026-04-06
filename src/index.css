@@ -1,5 +1,4 @@
 @import "tailwindcss";
-<<<<<<< HEAD
 
 @theme {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
@@ -51,5 +50,3 @@
     color: black !important;
   }
 }
-=======
->>>>>>> aistudio/main

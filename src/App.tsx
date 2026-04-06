@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Plus,
@@ -685,30 +684,31 @@ export default function App() {
   const generateAIImage = async () => {
     if (isGenerating) return;
     setIsGenerating(true);
-    
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
-      const base = `A storyboard frame. Shot size: ${currentFrame.shotSize}. Camera angle: ${currentFrame.angle}. Camera move: ${currentFrame.cameraMove}. Action: ${currentFrame.action}. Dialogue: ${currentFrame.dialogue}. Style: black and white storyboard sketch, clean lines, professional.`;
-      const prompt = currentFrame.aiPrompt ? `${base} ${currentFrame.aiPrompt}` : base;
-      
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash-preview-image-generation',
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        config: {
-          responseModalities: ['TEXT', 'IMAGE'],
-        },
-      });
 
-      for (const part of response.candidates?.[0]?.content?.parts ?? []) {
-        if (part.inlineData) {
-          const imageUrl = `data:image/png;base64,${part.inlineData.data}`;
-          updateFrameData('image', imageUrl);
-          break;
-        }
-      }
+    try {
+      const toEn = (s: string) => {
+        const en = s.split('｜')[0].trim();
+        return /^[A-Za-z0-9\s\-→←↑↓]+$/.test(en) ? en : '';
+      };
+      const parts = [
+        'storyboard frame',
+        toEn(currentFrame.shotSize),
+        toEn(currentFrame.angle),
+        toEn(currentFrame.cameraMove),
+        currentFrame.action.replace(/[^\x00-\x7F]/g, ''),
+        currentFrame.dialogue.replace(/[^\x00-\x7F]/g, ''),
+        'black and white sketch, clean lines, professional storyboard',
+      ].filter(Boolean);
+      const base = parts.join(', ');
+      const prompt = currentFrame.aiPrompt ? `${base}, ${currentFrame.aiPrompt}` : base;
+      const encoded = encodeURIComponent(prompt);
+      const url = `https://image.pollinations.ai/prompt/${encoded}?width=1280&height=720&nologo=true&nofeed=true&seed=${Date.now()}`;
+
+      // Pollinationsは生成に時間がかかるため、直接URLをセットしてcanvasに任せる
+      updateFrameData('image', url);
     } catch (error) {
       console.error("AI Image Generation Error:", error);
-      alert('AI画像生成はGemini APIの課金設定が必要だよ。Google AI StudioでBillingを有効にしてね。');
+      alert('AI画像生成に失敗しちゃった。もう一度試してみてね。');
     } finally {
       setIsGenerating(false);
     }
@@ -2037,13 +2037,4 @@ function ToolButton({ active, onClick, icon, label }: { active: boolean, onClick
       </span>
     </button>
   );
-=======
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
-export default function App() {
-  return <div></div>;
->>>>>>> aistudio/main
 }
