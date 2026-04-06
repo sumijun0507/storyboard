@@ -691,16 +691,14 @@ export default function App() {
       const prompt = currentFrame.aiPrompt ? `${base} ${currentFrame.aiPrompt}` : base;
       
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [{ text: prompt }],
-        },
+        model: 'gemini-2.0-flash-preview-image-generation',
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: {
-          imageConfig: { aspectRatio: "16:9" },
+          responseModalities: ['TEXT', 'IMAGE'],
         },
       });
 
-      for (const part of response.candidates[0].content.parts) {
+      for (const part of response.candidates?.[0]?.content?.parts ?? []) {
         if (part.inlineData) {
           const imageUrl = `data:image/png;base64,${part.inlineData.data}`;
           updateFrameData('image', imageUrl);
@@ -709,6 +707,7 @@ export default function App() {
       }
     } catch (error) {
       console.error("AI Image Generation Error:", error);
+      alert('AI画像生成はGemini APIの課金設定が必要だよ。Google AI StudioでBillingを有効にしてね。');
     } finally {
       setIsGenerating(false);
     }
@@ -1193,7 +1192,7 @@ cameraMoveは必ず以下から選択: ${CAMERA_MOVES.join(' / ')}
 durationはミリ秒（整数）で指定してください。`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+        model: 'gemini-2.5-flash',
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
       });
 
