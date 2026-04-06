@@ -1,5 +1,10 @@
 {
+<<<<<<< HEAD
   "name": "Storyboarder Web",
   "description": "A professional storyboarding tool for visualizing stories with drawing tools, frame management, and metadata tracking.",
+=======
+  "name": "",
+  "description": "",
+>>>>>>> aistudio/main
   "requestFramePermissions": []
 }

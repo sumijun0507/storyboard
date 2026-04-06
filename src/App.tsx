@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Plus,
@@ -2036,4 +2037,13 @@ function ToolButton({ active, onClick, icon, label }: { active: boolean, onClick
       </span>
     </button>
   );
+=======
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+export default function App() {
+  return <div></div>;
+>>>>>>> aistudio/main
 }
